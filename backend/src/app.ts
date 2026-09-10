@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 
 import healthRoutes from "./routes/health.routes.js";
+import databaseRoutes from "./routes/database.routes.js";
+
 import { notFoundHandler } from "./middleware/notFound.middleware.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
@@ -11,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/health", healthRoutes);
+app.use("/api/db-test", databaseRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
