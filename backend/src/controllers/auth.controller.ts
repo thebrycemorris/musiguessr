@@ -8,6 +8,15 @@ import {
   getSpotifyProfile,
 } from "../services/spotify.service.js";
 
+type DatabaseUser = {
+  id: number;
+  spotify_id: string;
+  display_name: string | null;
+  email: string | null;
+  avatar_url: string | null;
+  created_at: string;
+};
+
 export const loginWithSpotify = (_req: Request, res: Response) => {
   const scopes = [
     "user-read-email",
@@ -86,13 +95,43 @@ export const spotifyCallback = async (
         FROM users
         WHERE spotify_id = ?
       `)
-      .get(profile.id);
+      .get(profile.id) as DatabaseUser;
+
+    const expiresAt =
+      Date.now() + tokenData.expires_in * 1000;
+
+    const tokenStatement = db.prepare(`
+      INSERT INTO spotify_tokens (
+        user_id,
+        access_token,
+        refresh_token,
+        expires_at
+      )
+      VALUES (?, ?, ?, ?)
+
+      ON CONFLICT(user_id)
+      DO UPDATE SET
+        access_token = excluded.access_token,
+        refresh_token = COALESCE(
+          excluded.refresh_token,
+          spotify_tokens.refresh_token
+        ),
+        expires_at = excluded.expires_at,
+        updated_at = CURRENT_TIMESTAMP
+    `);
+
+    tokenStatement.run(
+      user.id,
+      tokenData.access_token,
+      tokenData.refresh_token ?? null,
+      expiresAt
+    );
 
     return res.redirect(
-  `${env.frontendUrl}?login=success&user=${encodeURIComponent(
-    JSON.stringify(user)
-  )}`
-);
+      `${env.frontendUrl}?login=success&user=${encodeURIComponent(
+        JSON.stringify(user)
+      )}`
+    );
   } catch (error) {
     console.error("Spotify callback error:", error);
 

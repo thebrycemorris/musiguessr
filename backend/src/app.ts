@@ -4,7 +4,7 @@ import cors from "cors";
 import healthRoutes from "./routes/health.routes.js";
 import databaseRoutes from "./routes/database.routes.js";
 import authRoutes from "./routes/auth.routes.js";
-
+import spotifyRoutes from "./routes/spotify.routes.js";
 
 import { notFoundHandler } from "./middleware/notFound.middleware.js";
 import { errorHandler } from "./middleware/error.middleware.js";
@@ -17,6 +17,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/health", healthRoutes);
 app.use("/api/db-test", databaseRoutes);
+app.use("/api/spotify", spotifyRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
