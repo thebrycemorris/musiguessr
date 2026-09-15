@@ -8,6 +8,9 @@ export const initializeDatabase = () => {
       display_name TEXT,
       email TEXT,
       avatar_url TEXT,
+      spotify_profile_url TEXT,
+      bio TEXT,
+      favorite_genre TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -55,7 +58,33 @@ export const initializeDatabase = () => {
 
       UNIQUE(game_id, round_number)
     );
+
+    CREATE TABLE IF NOT EXISTS friendships (
+      user_id INTEGER NOT NULL,
+      friend_id INTEGER NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (user_id, friend_id),
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (friend_id) REFERENCES users(id) ON DELETE CASCADE
+    );
   `);
+
+  const userColumns = db
+    .prepare("PRAGMA table_info(users)")
+    .all() as Array<{ name: string }>;
+  const existingColumns = new Set(
+    userColumns.map((column) => column.name)
+  );
+
+  for (const column of [
+    "spotify_profile_url",
+    "bio",
+    "favorite_genre",
+  ]) {
+    if (!existingColumns.has(column)) {
+      db.exec(`ALTER TABLE users ADD COLUMN ${column} TEXT`);
+    }
+  }
 
   console.log("Musiguessr database initialized");
 };

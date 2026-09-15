@@ -1,0 +1,278 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #1d75b9 #101419;
+}
+
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: #101419;
+}
+
+html::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: #1d75b9;
+  background-clip: padding-box;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #2385d0;
+  background-clip: padding-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background:
+    radial-gradient(circle at top, #1d1d1d 0%, #111111 40%, #080808 100%);
+
+  color: #ffffff;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+body[data-theme="light"] {
+  background: linear-gradient(135deg, #e6ebef 0%, #dce3e8 100%);
+  color: #17212b;
+}
+
+body[data-theme="light"] {
+  scrollbar-color: #1d75b9 #101419;
+}
+
+body[data-theme="light"] .navbar {
+  border-color: rgba(23, 33, 43, 0.18);
+  background: #dce3e8;
+  box-shadow:
+    12px 0 34px rgba(23, 33, 43, 0.12),
+    0 10px 30px rgba(23, 33, 43, 0.1);
+}
+
+body[data-theme="light"] .navbar-logo,
+body[data-theme="light"] .navbar-links a,
+body[data-theme="light"] .navbar-logout,
+body[data-theme="light"] .navbar-login {
+  color: #334454;
+}
+
+body[data-theme="light"] .navbar-links a,
+body[data-theme="light"] .navbar-logout,
+body[data-theme="light"] .navbar-login {
+  border-color: rgba(23, 33, 43, 0.22);
+  background: rgba(255, 255, 255, 0.16);
+}
+
+body[data-theme="light"] .navbar-links a:hover,
+body[data-theme="light"] .navbar-logout:hover,
+body[data-theme="light"] .navbar-login:hover {
+  border-color: rgba(23, 33, 43, 0.34);
+  background: rgba(29, 117, 185, 0.1);
+  color: #17212b;
+}
+
+body[data-theme="light"] .navbar-logout:hover {
+  border-color: rgba(239, 68, 68, 0.7);
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+body[data-theme="light"] h1,
+body[data-theme="light"] h2,
+body[data-theme="light"] h3 {
+  color: #17212b;
+}
+
+body[data-theme="light"] .home-description,
+body[data-theme="light"] .dashboard-subtitle,
+body[data-theme="light"] .game-prestart > p:not(.game-eyebrow),
+body[data-theme="light"] .profile-description,
+body[data-theme="light"] .settings-header > p:last-child,
+body[data-theme="light"] .settings-row p {
+  color: #5c6b78;
+}
+
+body[data-theme="light"] .feature-card,
+body[data-theme="light"] .profile-card-main,
+body[data-theme="light"] .profile-stat-card,
+body[data-theme="light"] .profile-card,
+body[data-theme="light"] .settings-list,
+body[data-theme="light"] .login-panel {
+  border-color: rgba(29, 117, 185, 0.2);
+  background: transparent;
+}
+
+body[data-theme="light"] .game-prestart {
+  border-color: rgba(23, 33, 43, 0.2);
+  border-radius: 12px;
+  background: #d3dde3;
+  box-shadow: 0 8px 20px rgba(23, 33, 43, 0.06);
+}
+
+body[data-theme="light"] .game-prestart .game-mode-picker {
+  border-color: rgba(23, 33, 43, 0.12);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+body[data-theme="light"] .game-prestart .game-mode-button {
+  color: #334454;
+}
+
+body[data-theme="light"] .game-prestart .game-mode-button.active {
+  color: #17212b;
+}
+
+body[data-theme="light"] .profile-secondary-button {
+  border-color: rgba(23, 33, 43, 0.2);
+  background: #d3dde3;
+  box-shadow: 0 8px 20px rgba(23, 33, 43, 0.06);
+  color: #000000;
+}
+
+body[data-theme="light"] .profile-secondary-button:hover {
+  border-color: rgba(23, 33, 43, 0.34);
+  background: #cbd6dd;
+}
+
+body[data-theme="dark"] .feature-card,
+body[data-theme="dark"] .feature-panel,
+body[data-theme="dark"] .discover-card,
+body[data-theme="dark"] .leaderboard-row,
+body[data-theme="dark"] .login-panel,
+body[data-theme="dark"] .settings-row,
+body[data-theme="dark"] .profile-card-main,
+body[data-theme="dark"] .profile-stat-card,
+body[data-theme="dark"] .profile-panel,
+body[data-theme="dark"] .profile-card,
+body[data-theme="dark"] .play-card,
+body[data-theme="dark"] .stat-card,
+body[data-theme="dark"] .stats-card,
+body[data-theme="dark"] .history-row,
+body[data-theme="dark"] .person-card,
+body[data-theme="dark"] .public-profile-card,
+body[data-theme="dark"] .game-prestart {
+  border-color: rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: #151719;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+body[data-theme="dark"] .settings-list {
+  border-top: 0;
+}
+
+body[data-theme="dark"] .settings-row {
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+body[data-theme="light"] .settings-row {
+  border: 1px solid rgba(29, 89, 185, 0.35);
+}
+
+body[data-theme="light"] .profile-spotify-link {
+  color: #1d75b9;
+}
+
+body[data-theme="light"] .profile-spotify-link.muted-link {
+  color: #526473;
+}
+
+body[data-theme="light"] .profile-pill {
+  border-color: rgba(29, 89, 185, 0.45);
+  background: #cbd6dd;
+  color: #334454;
+}
+
+body[data-theme="light"] .leaderboard-row {
+  color: #526473;
+}
+
+body[data-theme="light"] .leaderboard-row strong {
+  color: #17212b;
+}
+
+body[data-theme="light"] .leaderboard-row .leaderboard-rank {
+  color: #1769a6 !important;
+}
+
+body[data-theme="light"] .feature-card p,
+body[data-theme="light"] .profile-stat-card span,
+body[data-theme="light"] .profile-card p {
+  color: #5c6b78;
+}
+
+body[data-theme="light"] .settings-list,
+body[data-theme="light"] .settings-row {
+  border-color: rgba(23, 33, 43, 0.12);
+}
+
+body[data-theme="light"] .theme-control {
+  border-color: rgba(23, 33, 43, 0.16);
+}
+
+body[data-theme="light"] .theme-control button {
+  color: #5c6b78;
+}
+
+body[data-theme="light"] .feature-card,
+body[data-theme="light"] .feature-panel,
+body[data-theme="light"] .discover-card,
+body[data-theme="light"] .leaderboard-row,
+body[data-theme="light"] .login-panel,
+body[data-theme="light"] .profile-card-main,
+body[data-theme="light"] .profile-stat-card,
+body[data-theme="light"] .profile-panel,
+body[data-theme="light"] .profile-card,
+body[data-theme="light"] .play-card,
+body[data-theme="light"] .stat-card,
+body[data-theme="light"] .stats-card,
+body[data-theme="light"] .history-row,
+body[data-theme="light"] .person-card,
+body[data-theme="light"] .public-profile-card {
+  border-color: rgba(23, 33, 43, 0.2);
+  border-radius: 12px;
+  background: #d3dde3;
+  box-shadow: 0 8px 20px rgba(23, 33, 43, 0.06);
+}
+
+body[data-theme="dark"] .history-row {
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+}
+
+body[data-theme="light"] .history-row {
+  margin-bottom: 12px;
+  border: 1px solid rgba(23, 33, 43, 0.2);
+  border-radius: 12px;
+}

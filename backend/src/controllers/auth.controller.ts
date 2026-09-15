@@ -14,6 +14,9 @@ type DatabaseUser = {
   display_name: string | null;
   email: string | null;
   avatar_url: string | null;
+  spotify_profile_url: string | null;
+  bio: string | null;
+  favorite_genre: string | null;
   created_at: string;
 };
 
@@ -23,6 +26,8 @@ export const loginWithSpotify = (_req: Request, res: Response) => {
     "user-read-private",
     "user-top-read",
     "user-library-read",
+    "streaming",
+    "user-modify-playback-state",
   ];
 
   const params = new URLSearchParams({
@@ -71,7 +76,7 @@ export const spotifyCallback = async (
 
       ON CONFLICT(spotify_id)
       DO UPDATE SET
-        display_name = excluded.display_name,
+        display_name = COALESCE(users.display_name, excluded.display_name),
         email = excluded.email,
         avatar_url = excluded.avatar_url
     `);
@@ -91,6 +96,9 @@ export const spotifyCallback = async (
           display_name,
           email,
           avatar_url,
+          spotify_profile_url,
+          bio,
+          favorite_genre,
           created_at
         FROM users
         WHERE spotify_id = ?
@@ -128,12 +136,15 @@ export const spotifyCallback = async (
     );
 
     return res.redirect(
-      `${env.frontendUrl}?login=success&user=${encodeURIComponent(
+      `${env.frontendUrl}/dashboard?login=success&user=${encodeURIComponent(
         JSON.stringify(user)
       )}`
     );
   } catch (error) {
-    console.error("Spotify callback error:", error);
+    console.error(
+      "Spotify callback error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
@@ -142,4 +153,68 @@ export const spotifyCallback = async (
       },
     });
   }
+};
+
+export const updateProfile = (req: Request, res: Response) => {
+  const { userId, display_name, avatar_url, spotify_profile_url, bio, favorite_genre } =
+    req.body as {
+      userId?: number;
+      display_name?: string;
+      avatar_url?: string;
+      spotify_profile_url?: string;
+      bio?: string;
+      favorite_genre?: string;
+    };
+
+  if (!userId) {
+    return res.status(400).json({
+      success: false,
+      error: { message: "Missing user id" },
+    });
+  }
+
+  const result = db
+    .prepare(`
+      UPDATE users
+      SET display_name = ?,
+          avatar_url = ?,
+          spotify_profile_url = ?,
+          bio = ?,
+          favorite_genre = ?
+      WHERE id = ?
+    `)
+    .run(
+      display_name ?? null,
+      avatar_url ?? null,
+      spotify_profile_url ?? null,
+      bio ?? null,
+      favorite_genre ?? null,
+      userId
+    );
+
+  if (result.changes === 0) {
+    return res.status(404).json({
+      success: false,
+      error: { message: "User not found" },
+    });
+  }
+
+  const user = db
+    .prepare(`
+      SELECT
+        id,
+        spotify_id,
+        display_name,
+        email,
+        avatar_url,
+        spotify_profile_url,
+        bio,
+        favorite_genre,
+        created_at
+      FROM users
+      WHERE id = ?
+    `)
+    .get(userId);
+
+  return res.json({ success: true, user });
 };

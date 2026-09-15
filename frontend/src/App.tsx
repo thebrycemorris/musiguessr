@@ -1,78 +1,75 @@
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 import { useEffect, useState } from "react";
 
-type User = {
-  id: number;
-  spotify_id: string;
-  display_name: string | null;
-  email: string | null;
-  avatar_url: string | null;
-  created_at: string;
-};
+import Navbar from "./components/Navbar";
+import { SpotifyProvider } from "./hooks/useSpotifyPlayer";
+import Dashboard from "./pages/Dashboard";
+import Game from "./pages/Game";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
+import Stats from "./pages/Stats";
+import Settings from "./pages/Settings";
+import Leaderboard from "./pages/Leaderboard";
+import Daily from "./pages/Daily";
+import Discover from "./pages/Discover";
+import People from "./pages/People";
+import PublicProfile from "./pages/PublicProfile";
 
 function App() {
-  const [user, setUser] = useState<User | null>(null);
+  const [theme, setTheme] = useState<"dark" | "light">(() =>
+    localStorage.getItem("musiguessr_theme") === "light"
+      ? "light"
+      : "dark"
+  );
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-
-    const login = params.get("login");
-    const userData = params.get("user");
-
-    if (login === "success" && userData) {
-      try {
-        const parsedUser = JSON.parse(userData);
-        setUser(parsedUser);
-
-        window.history.replaceState(
-          {},
-          document.title,
-          window.location.pathname
-        );
-      } catch (error) {
-        console.error("Could not parse user data:", error);
-      }
-    }
-  }, []);
-
-  const handleSpotifyLogin = () => {
-    window.location.href =
-      "http://127.0.0.1:3000/api/auth/spotify";
-  };
-
-  if (user) {
-    return (
-      <main>
-        <h1>Musiguessr</h1>
-
-        <h2>
-          Welcome, {user.display_name ?? "Spotify User"}!
-        </h2>
-
-        {user.avatar_url && (
-          <img
-            src={user.avatar_url}
-            alt="Spotify profile"
-            width="120"
-          />
-        )}
-
-        <p>You're connected to Spotify.</p>
-
-        <button>Start Game</button>
-      </main>
-    );
-  }
+    document.body.dataset.theme = theme;
+    localStorage.setItem("musiguessr_theme", theme);
+  }, [theme]);
 
   return (
-    <main>
-      <h1>Musiguessr</h1>
+    <BrowserRouter>
+      <SpotifyProvider>
+        <div className="app-shell">
+          <Navbar />
 
-      <p>Guess the song as quick as you can!</p>
-
-      <button onClick={handleSpotifyLogin}>
-        Connect with Spotify
-      </button>
-    </main>
+          <div className="page-frame">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/dashboard"
+              element={<Dashboard />}
+            />
+            <Route path="/game" element={<Game />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/stats" element={<Stats />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
+            <Route path="/people" element={<People />} />
+            <Route path="/profile/:userId" element={<PublicProfile />} />
+            <Route path="/daily" element={<Daily />} />
+            <Route path="/discover" element={<Discover />} />
+            <Route
+              path="/settings"
+              element={
+                <Settings
+                  theme={theme}
+                  onThemeChange={setTheme}
+                />
+              }
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          </div>
+        </div>
+      </SpotifyProvider>
+    </BrowserRouter>
   );
 }
 

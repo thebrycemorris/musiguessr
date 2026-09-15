@@ -1,0 +1,36 @@
+import { Link } from "react-router-dom";
+
+import "../styles/login.css";
+
+function Login() {
+  const handleSpotifyLogin = () => {
+    window.location.href =
+      "http://127.0.0.1:3000/api/auth/spotify";
+  };
+
+  return (
+    <main className="login-page">
+      <section className="login-panel">
+        <p className="login-eyebrow">Welcome back</p>
+        <h1>Sign in to Musiguessr</h1>
+        <p className="login-description">
+          Connect your Spotify account to play with the music you already know.
+        </p>
+
+        <button
+          type="button"
+          className="spotify-button login-button"
+          onClick={handleSpotifyLogin}
+        >
+          Continue with Spotify
+        </button>
+
+        <Link to="/" className="login-back-link">
+          Back to home
+        </Link>
+      </section>
+    </main>
+  );
+}
+
+export default Login;

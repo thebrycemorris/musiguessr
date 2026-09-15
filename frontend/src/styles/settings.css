@@ -1,0 +1,227 @@
+.settings-page {
+  min-height: 100svh;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 72px 40px 90px;
+}
+
+.centered-settings-page {
+  text-align: center;
+}
+
+.settings-eyebrow {
+  color: #1d75b9;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.settings-header h1 {
+  margin-top: 10px;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1;
+  letter-spacing: -3px;
+}
+
+.settings-header > p:last-child {
+  margin-top: 18px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #8d8d8d;
+}
+
+.settings-list {
+  margin-top: 52px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: left;
+}
+
+.settings-row h2 {
+  font-size: 1.2rem;
+}
+
+.settings-row p {
+  margin-top: 6px;
+  color: #8d8d8d;
+  font-size: 0.9rem;
+}
+
+.theme-control {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+}
+
+.theme-control button {
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: #9b9b9b;
+  font-weight: 700;
+}
+
+.theme-control button.is-selected {
+  background: #1d75b9;
+  color: #ffffff;
+}
+
+@media (max-width: 650px) {
+  .settings-page {
+    padding: 52px 20px 90px;
+  }
+
+  .settings-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.settings-danger-button {
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.settings-dropdown {
+  position: relative;
+  width: 142px;
+}
+
+.settings-dropdown-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.settings-dropdown-menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: rgba(12, 15, 22, 0.96);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.36);
+}
+
+.settings-dropdown-option {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #f3f3f3;
+  text-align: left;
+  font-weight: 600;
+}
+
+.settings-dropdown-option:hover,
+.settings-dropdown-option.is-selected {
+  border-color: rgba(29, 89, 185, 0.45);
+  background: rgba(29, 117, 185, 0.1);
+}
+
+body[data-theme="light"] .settings-dropdown-trigger {
+  border-color: rgba(23, 33, 43, 0.28);
+  background: #cfd9df;
+  color: #17212b;
+}
+
+body[data-theme="light"] .settings-dropdown-menu {
+  border-color: rgba(23, 33, 43, 0.12);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 20px 40px rgba(23, 33, 43, 0.16);
+}
+
+body[data-theme="light"] .settings-dropdown-option {
+  color: #334454;
+}
+
+body[data-theme="light"] .settings-list {
+  border-top: 0;
+}
+
+body[data-theme="light"] .settings-row {
+  margin-bottom: 12px;
+  padding: 22px 24px;
+  border: 1px solid rgba(23, 33, 43, 0.2);
+  border-radius: 12px;
+  background: #d3dde3;
+  box-shadow: 0 8px 20px rgba(23, 33, 43, 0.06);
+}
+
+body[data-theme="light"] .settings-row h2 {
+  color: #17212b;
+}
+
+body[data-theme="light"] .settings-row p {
+  color: #526473;
+}
+
+body[data-theme="light"] .theme-control {
+  border-color: rgba(23, 33, 43, 0.24);
+  background: #c8d3da;
+}
+
+body[data-theme="light"] .theme-control button {
+  color: #334454;
+}
+
+.settings-danger-button {
+  border-color: rgba(239, 68, 68, 0.55);
+  color: #f87171;
+}
+
+.settings-danger-button:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.settings-danger-button:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+body[data-theme="light"] .settings-select,
+body[data-theme="light"] .settings-select {
+  border-color: rgba(23, 33, 43, 0.16);
+  background: rgba(255, 255, 255, 0.48);
+  color: #17212b;
+}
+
+body[data-theme="light"] .settings-danger-button {
+  border-color: rgba(239, 68, 68, 0.55);
+  background: transparent;
+  color: #f87171;
+}
+
+body[data-theme="light"] .theme-control button.is-selected {
+  color: #ffffff;
+}

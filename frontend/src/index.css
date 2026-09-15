@@ -1,6 +1,6 @@
 :root {
   --text: #6b6375;
-  --text-h: #08060d;
+  margin-left: 0;
   --bg: #fff;
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
@@ -51,19 +51,63 @@
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  --navbar-width: 180px;
+  width: 100%;
   min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+  text-align: center;
   box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.page-frame {
+  min-height: calc(100svh - 32px);
+  margin: 16px 16px 16px 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  background: #101214;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+}
+
+.page-frame > main,
+.page-frame > .game-prestart-shell {
+  min-height: calc(100svh - 32px);
+}
+
+body[data-theme="light"] .page-frame {
+  border-color: rgba(23, 33, 43, 0.16);
+  background: #e1e7eb;
+  box-shadow: 0 14px 34px rgba(23, 33, 43, 0.08);
 }
 
 body {
   margin: 0;
+}
+
+@media (max-width: 900px) and (min-width: 651px) {
+  #root {
+    --navbar-width: 156px;
+  }
+}
+
+@media (max-width: 650px) {
+  .page-frame {
+    min-height: calc(100svh - 84px);
+    margin: 8px 8px 84px;
+    border-radius: 20px;
+  }
+
+  .page-frame > main,
+  .page-frame > .game-prestart-shell {
+    min-height: calc(100svh - 100px);
+  }
+
+  #root {
+    --navbar-width: 0px;
+    width: 100%;
+    padding-left: 0;
+    padding-bottom: 68px;
+  }
 }
 
 h1,
