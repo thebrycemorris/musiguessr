@@ -82,6 +82,7 @@ body[data-theme="light"] .page-frame {
 
 body {
   margin: 0;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 @media (max-width: 900px) and (min-width: 651px) {
