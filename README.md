@@ -109,3 +109,28 @@ The backend output is written to `backend/dist` and listens on `PORT`.
 7. Configure CORS and HTTPS for the final frontend and backend domains.
 
 Never commit `.env` files or Spotify client secrets. Use the hosting provider's secret/environment-variable manager for production values.
+
+## Suggested First Deployment
+
+This repository includes provider configuration for a Vercel frontend and a Render backend.
+
+### Backend on Render
+
+1. Create a new Render Blueprint from the `deployment` branch.
+2. Select this repository; Render will use `render.yaml`.
+3. Add `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` as secrets.
+4. Set `FRONTEND_URL` after Vercel provides the frontend URL.
+5. Set `SPOTIFY_REDIRECT_URI` to `https://YOUR-API.onrender.com/api/auth/spotify/callback`.
+6. Register that exact callback URL in the Spotify Developer Dashboard.
+
+The Blueprint includes a persistent disk for the SQLite database. A Render plan with persistent disk support is required.
+
+### Frontend on Vercel
+
+1. Import the repository into Vercel and select the `deployment` branch.
+2. Set the project root directory to `frontend`.
+3. Use `npm run build` as the build command and `dist` as the output directory.
+4. Add `VITE_API_URL=https://YOUR-API.onrender.com` as a production environment variable.
+5. Deploy, then copy the Vercel URL into Render's `FRONTEND_URL` value.
+
+`frontend/vercel.json` provides the SPA fallback required by React Router. After both services are deployed, use the Vercel URL as the public app address.

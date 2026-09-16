@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: musiguessr-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SPOTIFY_CLIENT_ID
+        sync: false
+      - key: SPOTIFY_CLIENT_SECRET
+        sync: false
+      - key: SPOTIFY_REDIRECT_URI
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+    disk:
+      name: musiguessr-sqlite
+      mountPath: /opt/render/project/src/backend/data
+      sizeGB: 1
