@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { API_URL } from "../config/api";
 import "../styles/feature-pages.css";
 
 type Track = {
@@ -113,7 +112,7 @@ function Daily() {
     const loadQuestions = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/api/spotify/top-tracks?userId=${user.id}`
+          `http://127.0.0.1:3000/api/spotify/top-tracks?userId=${user.id}`
         );
         const result = await response.json();
 

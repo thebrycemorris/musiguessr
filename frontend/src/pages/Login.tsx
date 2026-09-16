@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
 
-import { API_URL } from "../config/api";
 import "../styles/login.css";
 
 function Login() {
   const handleSpotifyLogin = () => {
     window.location.href =
-      `${API_URL}/api/auth/spotify`;
+      "http://127.0.0.1:3000/api/auth/spotify";
   };
 
   return (

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router-dom";
 
-import { API_URL } from "../config/api";
 import "../styles/feature-pages.css";
 
 type Person = {
@@ -24,7 +23,7 @@ function People() {
   useEffect(() => {
     if (!currentUser?.id) return;
 
-    fetch(`${API_URL}/api/community/friends?userId=${currentUser.id}`)
+    fetch(`http://127.0.0.1:3000/api/community/friends?userId=${currentUser.id}`)
       .then((response) => response.json())
       .then((result) => setFriends(result.data?.friends ?? []))
       .catch(() => setFriends([]));
@@ -35,7 +34,7 @@ function People() {
     if (!query.trim()) return;
 
     const response = await fetch(
-      `${API_URL}/api/community/users?q=${encodeURIComponent(query.trim())}`
+      `http://127.0.0.1:3000/api/community/users?q=${encodeURIComponent(query.trim())}`
     );
     const result = await response.json();
     setPeople(result.data?.users ?? []);
@@ -47,7 +46,7 @@ function People() {
       return;
     }
 
-    await fetch(`${API_URL}/api/community/friends`, {
+    await fetch("http://127.0.0.1:3000/api/community/friends", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: currentUser.id, friendId }),

@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { API_URL } from "../config/api";
 import "../styles/profile.css";
 
 type User = {
@@ -102,7 +101,7 @@ function Profile() {
     if (!user) return;
 
     const response = await fetch(
-      `${API_URL}/api/auth/profile`,
+      "http://127.0.0.1:3000/api/auth/profile",
       {
         method: "PUT",
         headers: {

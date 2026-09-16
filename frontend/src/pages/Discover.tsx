@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSpotifyPlayer } from "../hooks/useSpotifyPlayer";
-import { API_URL } from "../config/api";
 import "../styles/feature-pages.css";
 
 type Track = {
@@ -41,7 +40,7 @@ function Discover() {
     }
 
     let cancelled = false;
-    fetch(`${API_URL}/api/spotify/discover?userId=${user.id}`)
+    fetch(`http://127.0.0.1:3000/api/spotify/discover?userId=${user.id}`)
       .then((response) => response.json())
       .then((result) => {
         if (cancelled) return;
@@ -72,7 +71,7 @@ function Discover() {
 
     try {
       const response = await fetch(
-        `${API_URL}/api/spotify/discover?userId=${user.id}&refresh=${Date.now()}`
+        `http://127.0.0.1:3000/api/spotify/discover?userId=${user.id}&refresh=${Date.now()}`
       );
       const result = await response.json();
       if (!response.ok || !result.success) {
@@ -92,7 +91,7 @@ function Discover() {
 
     setPlayingId(track.id);
     try {
-      const response = await fetch(`${API_URL}/api/spotify/play`, {
+      const response = await fetch("http://127.0.0.1:3000/api/spotify/play", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: user.id, deviceId, trackUri: track.uri }),

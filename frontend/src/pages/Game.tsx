@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSpotifyPlayer } from "../hooks/useSpotifyPlayer";
-import { API_URL } from "../config/api";
 import "../styles/game.css";
 
 type User = {
@@ -128,8 +127,8 @@ function Game() {
       try {
         const endpoint =
           gameMode === "discovery"
-            ? `${API_URL}/api/spotify/discover?userId=${user.id}`
-            : `${API_URL}/api/spotify/top-tracks?userId=${user.id}`;
+            ? `http://127.0.0.1:3000/api/spotify/discover?userId=${user.id}`
+            : `http://127.0.0.1:3000/api/spotify/top-tracks?userId=${user.id}`;
 
         const response = await fetch(endpoint);
 
@@ -202,7 +201,7 @@ function Game() {
 
     try {
       const response = await fetch(
-        `${API_URL}/api/spotify/play`,
+        "http://127.0.0.1:3000/api/spotify/play",
         {
           method: "PUT",
 
@@ -438,7 +437,7 @@ function Game() {
     );
 
     if (user) {
-      fetch(`${API_URL}/api/community/games`, {
+      fetch("http://127.0.0.1:3000/api/community/games", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
