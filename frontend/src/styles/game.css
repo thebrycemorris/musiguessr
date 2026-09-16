@@ -61,32 +61,6 @@
   font-size: 1.7rem;
 }
 
-.game-timer {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-left: auto;
-}
-
-.game-timer span {
-  color: #777777;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.game-timer strong {
-  min-width: 58px;
-  color: #1d75b9;
-  font-size: 1.25rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.game-timer small {
-  color: #777777;
-  font-size: 0.75rem;
-}
-
 /* PROGRESS */
 
 .game-progress {
@@ -317,6 +291,14 @@
   font-weight: 800;
   letter-spacing: 1.4px;
   text-transform: uppercase;
+}
+
+.game-snippet-label {
+  margin-top: 8px;
+  color: #1d75b9;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
 }
 
 .game-answer-section h1 {
@@ -658,6 +640,28 @@
 /* RESPONSIVE */
 
 @media (max-width: 900px) {
+  .game-prestart-shell {
+    min-height: 0 !important;
+    height: calc(100svh - 100px);
+    overflow-y: auto;
+    align-items: flex-start;
+    padding: 24px 16px 100px;
+    box-sizing: border-box;
+  }
+
+  .game-prestart {
+    width: min(760px, 100%);
+    padding: 30px 22px;
+  }
+
+  .game-prestart h1 {
+    font-size: clamp(2rem, 7vw, 3rem);
+  }
+
+  .game-prestart .game-mode-picker {
+    margin-top: 24px;
+  }
+
   .game-page {
     padding: 35px 20px 70px;
   }
@@ -682,6 +686,22 @@
   }
 }
 
+@media (max-width: 800px) {
+  .game-prestart-shell {
+    height: calc(100svh - 100px);
+    min-height: 0 !important;
+    overflow-y: auto;
+    align-items: flex-start;
+    padding: 24px 16px 100px;
+    box-sizing: border-box;
+  }
+
+  .game-prestart {
+    width: min(760px, 100%);
+    padding: 30px 22px;
+  }
+}
+
 @media (max-width: 550px) {
   .game-topbar {
     align-items: flex-start;
@@ -694,12 +714,6 @@
     gap: 2px;
   }
 
-  .game-timer {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-  }
-
   .game-actions {
     flex-direction: column;
   }
@@ -708,4 +722,8 @@
   .game-secondary-button {
     width: 100%;
   }
+}
+
+.game-snippet-button {
+  margin-top: 24px;
 }

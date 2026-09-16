@@ -39,5 +39,17 @@ declare global {
     pause(): Promise<void>;
     resume(): Promise<void>;
     togglePlay(): Promise<void>;
+    getCurrentState(): Promise<SpotifyPlaybackState | null>;
+  }
+
+  interface SpotifyPlaybackState {
+    paused: boolean;
+    position: number;
+    duration: number;
+    track_window: {
+      current_track: {
+        id: string;
+      };
+    };
   }
 }

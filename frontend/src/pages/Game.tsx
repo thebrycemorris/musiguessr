@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSpotifyPlayer } from "../hooks/useSpotifyPlayer";
@@ -31,8 +31,8 @@ type GameHistoryItem = {
   completedAt: string;
 };
 
-const ROUND_TIME_LIMIT = 12;
-const MAX_ROUND_POINTS = 1000;
+const ROUND_DURATION_SECONDS = 15;
+const MAX_ROUND_SCORE = 1000;
 
 type GameMode = "liked" | "discovery";
 
@@ -50,8 +50,8 @@ function Game() {
   const [gameMode, setGameMode] = useState<GameMode>("liked");
   const [score, setScore] = useState(0);
   const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(ROUND_TIME_LIMIT);
-  const [pointsEarned, setPointsEarned] = useState(0);
+  const [timeRemaining, setTimeRemaining] = useState(ROUND_DURATION_SECONDS);
+  const [roundPoints, setRoundPoints] = useState(0);
   const totalRounds = Number(
     localStorage.getItem("musiguessr_rounds") ?? 10
   );
@@ -64,6 +64,8 @@ function Game() {
 
   const [gameStarted, setGameStarted] = useState(false);
   const [startingGame, setStartingGame] = useState(false);
+  const roundDeadlineRef = useRef<number | null>(null);
+  const answeredRef = useRef(false);
 
   const user = useMemo<User | null>(() => {
     const storedUser =
@@ -257,8 +259,6 @@ function Game() {
     setStartingGame(true);
 
     try {
-      await playCurrentTrack();
-      setTimeRemaining(ROUND_TIME_LIMIT);
       setGameStarted(true);
     } catch {
       setError(
@@ -269,32 +269,45 @@ function Game() {
     }
   };
 
-  /*
-   * Automatically play each new round
-   */
   useEffect(() => {
-    if (
-      !gameStarted ||
-      !playerReady ||
-      !deviceId ||
-      !currentTrack ||
-      answered
-    ) {
+    answeredRef.current = answered;
+  }, [answered]);
+
+  useEffect(() => {
+    if (!gameStarted || !currentTrack) {
       return;
     }
 
+    const deadline = Date.now() + ROUND_DURATION_SECONDS * 1000;
+    roundDeadlineRef.current = deadline;
+    setTimeRemaining(ROUND_DURATION_SECONDS);
     playCurrentTrack().catch((err) => {
-      console.error(
-        "Automatic playback error:",
-        err
-      );
+      console.error("Could not start Spotify playback:", err);
     });
-  }, [
-    gameStarted,
-    playerReady,
-    deviceId,
-    currentRound,
-  ]);
+
+    const timer = window.setInterval(() => {
+      const remaining = Math.max(
+        0,
+        (deadline - Date.now()) / 1000
+      );
+
+      setTimeRemaining(remaining);
+
+      if (remaining <= 0) {
+        window.clearInterval(timer);
+        roundDeadlineRef.current = null;
+        if (!answeredRef.current) {
+          setWasCorrect(false);
+          setAnswered(true);
+        }
+        player?.pause().catch((err) => {
+          console.error("Could not pause Spotify player:", err);
+        });
+      }
+    }, 100);
+
+    return () => window.clearInterval(timer);
+  }, [currentRound, currentTrack, gameStarted, player]);
 
   /*
    * Normalize answers
@@ -321,15 +334,6 @@ function Game() {
       return;
     }
 
-    try {
-      await player?.pause();
-    } catch (err) {
-      console.error(
-        "Could not pause Spotify player:",
-        err
-      );
-    }
-
     const submittedGuess =
       normalizeAnswer(guess);
 
@@ -339,26 +343,32 @@ function Game() {
     const correct =
       submittedGuess === correctAnswer;
 
-    setWasCorrect(correct);
-    setAnswered(true);
-
     if (correct) {
-      const earnedPoints = Math.round(
-        (timeRemaining / ROUND_TIME_LIMIT) *
-          MAX_ROUND_POINTS
+      const awardedPoints = Math.max(
+        0,
+        Math.ceil(
+          (timeRemaining / ROUND_DURATION_SECONDS) * MAX_ROUND_SCORE
+        )
       );
 
-      setPointsEarned(earnedPoints);
+      setWasCorrect(true);
+      setAnswered(true);
+      setRoundPoints(awardedPoints);
       setScore(
         (previousScore) =>
-          previousScore + earnedPoints
+          previousScore + awardedPoints
       );
 
       setCorrectAnswers(
         (previousCorrect) =>
           previousCorrect + 1
       );
+      return;
     }
+
+    setWasCorrect(false);
+    setAnswered(true);
+    setRoundPoints(0);
   };
 
   /*
@@ -369,48 +379,12 @@ function Game() {
       return;
     }
 
-    try {
-      await player?.pause();
-    } catch (err) {
-      console.error(
-        "Could not pause Spotify player:",
-        err
-      );
-    }
-
+    setGuess("");
+    setShowSuggestions(false);
     setWasCorrect(false);
-    setPointsEarned(0);
     setAnswered(true);
+    setRoundPoints(0);
   };
-
-  useEffect(() => {
-    if (!gameStarted || answered) {
-      return;
-    }
-
-    const startedAt = Date.now();
-    const timer = window.setInterval(() => {
-      const elapsed = (Date.now() - startedAt) / 1000;
-      const remaining = Math.max(
-        0,
-        ROUND_TIME_LIMIT - elapsed
-      );
-
-      setTimeRemaining(remaining);
-
-      if (remaining === 0) {
-        window.clearInterval(timer);
-        player?.pause().catch((err) => {
-          console.error("Could not pause expired round:", err);
-        });
-        setWasCorrect(false);
-        setPointsEarned(0);
-        setAnswered(true);
-      }
-    }, 50);
-
-    return () => window.clearInterval(timer);
-  }, [gameStarted, answered, currentRound, player]);
 
   /*
    * Save completed game locally
@@ -482,6 +456,15 @@ function Game() {
    * Next round / finish game
    */
   const handleNextRound = async () => {
+    try {
+      await player?.pause();
+    } catch (err) {
+      console.error(
+        "Could not pause Spotify player:",
+        err
+      );
+    }
+
     if (
       currentRound + 1 >=
       tracks.length
@@ -539,8 +522,9 @@ function Game() {
     setCurrentRound(nextRoundIndex);
 
     setGuess("");
-    setTimeRemaining(ROUND_TIME_LIMIT);
-    setPointsEarned(0);
+    setTimeRemaining(ROUND_DURATION_SECONDS);
+    setRoundPoints(0);
+    answeredRef.current = false;
     setAnswered(false);
     setWasCorrect(false);
   };
@@ -701,6 +685,14 @@ function Game() {
       tracks.length) *
     100;
 
+  const currentRoundScore = Math.max(
+    0,
+    Math.ceil(
+      (timeRemaining / ROUND_DURATION_SECONDS) *
+        MAX_ROUND_SCORE
+    )
+  );
+
   return (
     <main className="game-page">
       <section className="game-topbar">
@@ -722,16 +714,6 @@ function Game() {
           </strong>
         </div>
 
-        <div className="game-timer">
-          <span>Time</span>
-          <strong>{timeRemaining.toFixed(1)}s</strong>
-          <small>
-            {Math.round(
-              (timeRemaining / ROUND_TIME_LIMIT) *
-                MAX_ROUND_POINTS
-            )} pts available
-          </small>
-        </div>
       </section>
 
       <div className="game-progress">
@@ -825,6 +807,14 @@ function Game() {
             <>
               <p className="game-eyebrow">
                 Name that song
+              </p>
+
+              <p className="game-snippet-label">
+                Time remaining: {timeRemaining.toFixed(1)}s
+              </p>
+
+              <p className="game-snippet-label">
+                Current value: {currentRoundScore.toLocaleString()} points
               </p>
 
               <h1>
@@ -932,7 +922,7 @@ function Game() {
 
               {wasCorrect && (
                 <div className="points-earned">
-                  +{pointsEarned.toLocaleString()} points
+                  +{roundPoints.toLocaleString()} points
                 </div>
               )}
 

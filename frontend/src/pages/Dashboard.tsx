@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/dashboard.css";
 
@@ -8,7 +8,10 @@ type User = {
   display_name: string | null;
   email: string | null;
   avatar_url: string | null;
+  spotify_profile_url?: string | null;
   created_at: string;
+  bio?: string;
+  favorite_genre?: string;
 };
 
 type GameResult = {
@@ -78,6 +81,32 @@ function Dashboard() {
     }
   }, []);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    display_name: user?.display_name ?? "",
+    avatar_url: user?.avatar_url ?? "",
+    spotify_profile_url: user?.spotify_profile_url ?? "",
+    bio: user?.bio ?? "",
+    favorite_genre: user?.favorite_genre ?? "",
+  });
+
+  const handleSaveProfile = async () => {
+    if (!user) return;
+
+    const response = await fetch("http://127.0.0.1:3000/api/auth/profile", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: user.id, ...formData }),
+    });
+
+    if (!response.ok) return;
+
+    const result = (await response.json()) as { user: User };
+    localStorage.setItem("musiguessr_user", JSON.stringify(result.user));
+    setIsEditing(false);
+    window.location.reload();
+  };
+
   const totalGames = games.length;
 
   const bestScore =
@@ -130,62 +159,58 @@ function Dashboard() {
           </p>
         </div>
 
-        <div
-          className="profile-card"
-          onClick={() => navigate("/profile")}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" || event.key === " ") {
-              navigate("/profile");
-            }
-          }}
-        >
-          {user?.avatar_url ? (
-            <img
-              src={user.avatar_url}
-              alt="Spotify profile"
-              className="profile-image"
-            />
-          ) : (
-            <div className="profile-placeholder">
-              M
-            </div>
-          )}
+        <div className="dashboard-connect-row">
+          <button className="dashboard-start-button" onClick={handleStartGame}>
+            Start Game
+          </button>
 
-          <div>
-            <h2>{user?.display_name ?? "Spotify User"}</h2>
-            <p>Connected with Spotify</p>
+          <div className="profile-card">
+            {user?.avatar_url ? (
+              <img
+                src={user.avatar_url}
+                alt="Spotify profile"
+                className="profile-image"
+              />
+            ) : (
+              <div className="profile-placeholder">
+                M
+              </div>
+            )}
+
+            <div>
+              <h2>{user?.display_name ?? "Spotify User"}</h2>
+              <p>Connected with Spotify</p>
+            </div>
           </div>
         </div>
       </section>
 
       <section className="play-card">
-        <div className="play-card-content">
-          <span className="play-label">Your Top Tracks</span>
-
-          <h2>
-            Think you know your music?
-          </h2>
-
-          <p>
-            Musiguessr pulls songs from your Spotify listening
-            history and put your memory to the test.
-          </p>
-
-          <button
-            className="start-game-button"
-            onClick={handleStartGame}
-          >
-            Start Game
-          </button>
-        </div>
-
-        <div className="play-visual">
-          <div className="record">
-            <div className="record-center" />
+        {isEditing ? (
+          <div className="dashboard-edit-fields">
+            <input name="display_name" value={formData.display_name} onChange={(event) => setFormData({ ...formData, display_name: event.target.value })} placeholder="Username" />
+            <input name="avatar_url" value={formData.avatar_url} onChange={(event) => setFormData({ ...formData, avatar_url: event.target.value })} placeholder="Profile image URL" />
+            <input name="spotify_profile_url" value={formData.spotify_profile_url} onChange={(event) => setFormData({ ...formData, spotify_profile_url: event.target.value })} placeholder="Spotify profile link" />
+            <input name="favorite_genre" value={formData.favorite_genre} onChange={(event) => setFormData({ ...formData, favorite_genre: event.target.value })} placeholder="Favorite genre" />
+            <textarea name="bio" value={formData.bio} onChange={(event) => setFormData({ ...formData, bio: event.target.value })} placeholder="Write a short bio" rows={3} />
+            <button className="dashboard-save-button" onClick={handleSaveProfile}>Save Profile</button>
           </div>
-        </div>
+        ) : (
+          <div className="dashboard-profile-main">
+            {user?.avatar_url ? <img src={user.avatar_url} alt="Spotify profile" className="dashboard-profile-avatar" /> : <div className="dashboard-profile-avatar dashboard-profile-fallback">{user?.display_name?.charAt(0)?.toUpperCase() ?? "S"}</div>}
+            <div>
+              <h2>{user?.display_name ?? "Spotify User"}</h2>
+              <p>{user?.bio || "Music lover, always chasing the next favorite track."}</p>
+              {user?.spotify_profile_url ? <a href={user.spotify_profile_url} target="_blank" rel="noreferrer">View Spotify profile</a> : <span>Spotify linked for music data only</span>}
+              <div className="dashboard-profile-pills">
+                <span>Favorite genre: {user?.favorite_genre || "all of it"}</span>
+                <span>Joined {user?.created_at ? new Date(user.created_at).toLocaleDateString() : "today"}</span>
+                <span>{totalGames} games played</span>
+              </div>
+              <button className="dashboard-edit-button" onClick={() => setIsEditing(true)}>Edit Profile</button>
+            </div>
+          </div>
+        )}
       </section>
 
       <section className="dashboard-stats">

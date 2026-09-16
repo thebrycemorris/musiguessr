@@ -7,6 +7,13 @@
   padding: 28px 32px 32px;
 }
 
+@media (max-width: 1100px) and (min-width: 651px) {
+  .profile-page {
+    max-width: 100%;
+    padding-inline: clamp(16px, 3vw, 32px);
+  }
+}
+
 .profile-header {
   display: flex;
   align-items: flex-end;

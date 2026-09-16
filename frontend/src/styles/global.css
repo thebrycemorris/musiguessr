@@ -7,27 +7,30 @@
 html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: #1d75b9 #101419;
+  scrollbar-color: #6a6a6a #121212;
 }
 
 html::-webkit-scrollbar {
-  width: 10px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 html::-webkit-scrollbar-track {
-  background: #101419;
+  background: #121212;
 }
 
 html::-webkit-scrollbar-thumb {
-  border: 3px solid transparent;
   border-radius: 999px;
-  background: #1d75b9;
-  background-clip: padding-box;
+  background: #6a6a6a;
 }
 
 html::-webkit-scrollbar-thumb:hover {
-  background: #2385d0;
-  background-clip: padding-box;
+  background: #8a8a8a;
 }
 
 body {
