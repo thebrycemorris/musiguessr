@@ -12,7 +12,6 @@ import Game from "./pages/Game";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import Profile from "./pages/Profile";
 import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 import Leaderboard from "./pages/Leaderboard";
@@ -48,7 +47,6 @@ function App() {
               element={<Dashboard />}
             />
             <Route path="/game" element={<Game />} />
-            <Route path="/profile" element={<Profile />} />
             <Route path="/stats" element={<Stats />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/people" element={<People />} />

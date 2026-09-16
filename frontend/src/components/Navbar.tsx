@@ -40,7 +40,10 @@ function Navbar() {
       </Link>
 
       <div className="navbar-links">
-        <Link to="/dashboard">Dashboard</Link>
+        <Link to="/dashboard" className="navbar-dashboard-link">
+          <span>Dashboard</span>
+          {user && (user.avatar_url ? <img src={user.avatar_url} alt="" className="navbar-avatar" /> : <span className="navbar-avatar navbar-avatar-fallback">{user.display_name?.charAt(0)?.toUpperCase() ?? "S"}</span>)}
+        </Link>
         <Link to="/game">Play</Link>
         <Link to="/daily">Daily</Link>
         <Link to="/discover">Discover</Link>
@@ -48,7 +51,6 @@ function Navbar() {
         <Link to="/leaderboard">Leaderboard</Link>
         <Link to="/people">Friends</Link>
         <Link to="/settings">Settings</Link>
-        {user && <ProfileLink user={user} />}
       </div>
 
       {user ? (
@@ -59,21 +61,6 @@ function Navbar() {
         </Link>
       )}
     </nav>
-  );
-}
-
-function ProfileLink({ user }: { user: StoredUser | null }) {
-  const fallback = user?.display_name?.charAt(0)?.toUpperCase() ?? "S";
-
-  return (
-    <Link to="/profile" className="navbar-profile" aria-label="Profile">
-      {user?.avatar_url ? (
-        <img src={user.avatar_url} alt="" className="navbar-avatar" />
-      ) : (
-        <span className="navbar-avatar navbar-avatar-fallback">{fallback}</span>
-      )}
-      <span className="navbar-profile-label">Profile</span>
-    </Link>
   );
 }
 

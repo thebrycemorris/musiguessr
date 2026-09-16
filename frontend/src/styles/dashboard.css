@@ -58,6 +58,120 @@
   border-radius: 18px;
 
   background: rgba(29, 117, 185, 0.05);
+  flex-wrap: wrap;
+}
+
+.dashboard-connect-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dashboard-start-button,
+.dashboard-edit-button,
+.dashboard-save-button {
+  padding: 10px 16px;
+  border: 1px solid #1d75b9;
+  border-radius: 999px;
+  background: #1d75b9;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.dashboard-start-button:hover,
+.dashboard-edit-button:hover,
+.dashboard-save-button:hover {
+  background: #2385d0;
+}
+
+.dashboard-edit-button {
+  padding: 6px 11px;
+  font-size: 0.78rem;
+}
+
+.dashboard-profile-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+}
+
+.dashboard-profile-avatar {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 68px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.dashboard-profile-fallback {
+  display: grid;
+  place-items: center;
+  background: #1d75b9;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.dashboard-profile-main h2 {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.8vw, 1.7rem);
+}
+
+.dashboard-profile-main p,
+.dashboard-profile-main > div > span {
+  margin-top: 8px;
+  color: #9b9b9b;
+}
+
+.dashboard-profile-main a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #1d75b9;
+  font-weight: 800;
+}
+
+.dashboard-profile-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.dashboard-profile-pills span {
+  padding: 8px 12px;
+  border: 1px solid rgba(29, 89, 185, 0.35);
+  border-radius: 999px;
+  color: #9b9b9b;
+  font-size: 0.8rem;
+}
+
+.dashboard-edit-button,
+.dashboard-save-button {
+  margin-top: 16px;
+  padding: 10px 18px;
+  border: 1px solid #1d75b9;
+  border-radius: 999px;
+  background: #1d75b9;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.dashboard-edit-fields {
+  display: grid;
+  width: min(620px, 100%);
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.dashboard-edit-fields input,
+.dashboard-edit-fields textarea {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid rgba(29, 89, 185, 0.35);
+  border-radius: 10px;
+  background: rgba(7, 14, 20, 0.25);
+  color: inherit;
 }
 
 .profile-image,
@@ -100,8 +214,7 @@
   min-height: clamp(190px, 27vh, 240px);
   margin-top: clamp(18px, 2.5vh, 26px);
 
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
+  display: block;
 
   overflow: hidden;
 
@@ -291,6 +404,15 @@
     width: 100%;
   }
 
+  .dashboard-connect-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dashboard-profile-main {
+    align-items: flex-start;
+  }
+
   .play-card {
     grid-template-columns: 1fr;
   }
@@ -312,4 +434,11 @@
     grid-template-columns: 1fr;
   }
 
+}
+
+@media (max-width: 1100px) and (min-width: 651px) {
+  .dashboard {
+    max-width: 100%;
+    padding-inline: clamp(16px, 3vw, 32px);
+  }
 }
