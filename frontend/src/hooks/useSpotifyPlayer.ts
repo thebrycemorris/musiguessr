@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import type { ReactNode } from "react";
+import { API_URL } from "../config/api";
 
 type PlayerState = {
   deviceId: string | null;
@@ -132,7 +133,7 @@ export const SpotifyProvider = ({
         getOAuthToken: async (callback) => {
           try {
             const response = await fetch(
-              `http://127.0.0.1:3000/api/spotify/access-token?userId=${userId}`
+              `${API_URL}/api/spotify/access-token?userId=${userId}`
             );
 
             const result = await response.json();

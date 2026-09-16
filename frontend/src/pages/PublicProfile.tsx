@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { API_URL } from "../config/api";
 import "../styles/feature-pages.css";
 
 type PublicUser = {
@@ -17,7 +18,7 @@ function PublicProfile() {
   const [user, setUser] = useState<PublicUser | null>(null);
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:3000/api/community/users/${userId}`)
+    fetch(`${API_URL}/api/community/users/${userId}`)
       .then((response) => response.json())
       .then((result) => setUser(result.data?.user ?? null));
   }, [userId]);

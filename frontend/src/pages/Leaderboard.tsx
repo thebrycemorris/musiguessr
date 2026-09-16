@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
+import { API_URL } from "../config/api";
 import "../styles/feature-pages.css";
 
 type LeaderboardEntry = {
@@ -17,7 +18,7 @@ function Leaderboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:3000/api/community/leaderboard")
+    fetch(`${API_URL}/api/community/leaderboard`)
       .then((response) => response.json())
       .then((result) => setEntries(result.data?.entries ?? []))
       .catch(() => setEntries([]))
