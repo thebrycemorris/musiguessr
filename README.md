@@ -9,12 +9,34 @@ Musiguessr is a Spotify-powered music game. Guess songs from your listening hist
 - SQLite through `better-sqlite3`
 - Spotify Web API and Spotify Web Playback SDK
 
+## Install Requirements
+
+Install these before setting up the project:
+
+- Git, to clone the repository
+- Node.js 20 or newer, which includes npm
+- A Spotify account; Spotify Premium is required for playback features
+- A Spotify Developer app with a client ID and client secret
+
+You do not need to install SQLite separately or install any packages globally. The project dependencies are installed locally with npm.
+
 ## Run It Locally
 
-Requirements: Node.js 20 or newer and a Spotify Premium account.
+Clone the repository and enter its folder:
+
+```powershell
+git clone https://github.com/thebrycemorris/musiguessr.git
+cd musiguessr
+```
 
 1. Create a Spotify Developer app and copy its client ID and secret.
-2. In `backend/`, copy `.env.example` to `.env` and add your credentials:
+2. In `backend/`, copy `.env.example` to `.env`:
+
+	```powershell
+	Copy-Item .env.example .env
+	```
+
+	Then open `backend/.env` and add your credentials:
 
 	```env
 	SPOTIFY_CLIENT_ID=your_client_id
